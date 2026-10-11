@@ -153,6 +153,10 @@ class MainWindow(QMainWindow):
         self.resize(1200, 800)
         self.setWindowIcon(IconFactory.create_icon("app_logo", size=64))
 
+        # Fullscreen state tracking
+        self._is_fullscreen_ui = False
+        self._was_maximized = False
+
         # Setup Profile and Ad-Block Interceptor
         self._init_web_engine()
 
@@ -288,6 +292,13 @@ class MainWindow(QMainWindow):
         self.btn_dl_manager.clicked.connect(self.open_download_manager)
         self.nav_toolbar.addWidget(self.btn_dl_manager)
 
+        # Fullscreen Toggle Button
+        self.btn_fullscreen = QToolButton()
+        self.btn_fullscreen.setIcon(IconFactory.create_icon("fullscreen"))
+        self.btn_fullscreen.setToolTip("Toggle Fullscreen (F11)")
+        self.btn_fullscreen.clicked.connect(self.toggle_fullscreen)
+        self.nav_toolbar.addWidget(self.btn_fullscreen)
+
         # Settings Button
         self.btn_settings = QToolButton()
         self.btn_settings.setIcon(IconFactory.create_icon("settings"))
@@ -384,6 +395,10 @@ class MainWindow(QMainWindow):
             QShortcut(QKeySequence(f"Ctrl+{i}"), self, lambda idx=i - 1: self._jump_to_tab(idx))
         QShortcut(QKeySequence("Ctrl+9"), self, self._jump_to_last_tab)
 
+        # Fullscreen shortcuts
+        QShortcut(QKeySequence("F11"), self, self.toggle_fullscreen)
+        QShortcut(QKeySequence("Escape"), self, self._on_escape_pressed)
+
     def _connect_signals(self):
         """Connects Media Controller and Tray signals."""
         # Media controller signals
@@ -425,6 +440,7 @@ class MainWindow(QMainWindow):
         # Connect tab signals
         view.titleChanged.connect(lambda title, v=view: self._on_tab_title_changed(v, title))
         view.urlChanged.connect(lambda u, v=view: self._on_tab_url_changed(v, u))
+        page.fullScreenRequested.connect(lambda req, v=view: self._on_fullscreen_requested(req, v))
 
         icon = IconFactory.create_icon("music" if service == "music" else "youtube")
         default_label = "YouTube Music" if service == "music" else "YouTube Video"
@@ -495,6 +511,9 @@ class MainWindow(QMainWindow):
 
     def _close_tab_at(self, index: int):
         """Safely stops and cleans up a tab widget."""
+        if self.isFullScreen() or getattr(self, "_is_fullscreen_ui", False):
+            self._exit_fullscreen()
+
         view = self.tabs.widget(index)
         if isinstance(view, QWebEngineView):
             # Clean up audio and page
@@ -695,6 +714,86 @@ class MainWindow(QMainWindow):
                 )
         else:
             self.statusBar().showMessage(f"✕ Download failed: {err_msg[:50]}", 6000)
+
+    # ----------------- Fullscreen Handling ----------------- #
+
+    def _on_fullscreen_requested(self, request, view: QWebEngineView = None):
+        """Handles HTML5 full screen request from web view pages (YouTube / YouTube Music)."""
+        if request.toggleOn():
+            request.accept()
+            self._enter_fullscreen()
+        else:
+            request.accept()
+            self._exit_fullscreen()
+
+    def _enter_fullscreen(self):
+        """Enters true fullscreen mode, hiding toolbars, tab bar, and mini player."""
+        if getattr(self, "_is_fullscreen_ui", False):
+            return
+        self._was_maximized = self.isMaximized()
+        self._is_fullscreen_ui = True
+        self.nav_toolbar.hide()
+        self.tabs.tabBar().hide()
+        if self.tabs.cornerWidget():
+            self.tabs.cornerWidget().hide()
+        self.bottom_player.hide()
+        self.statusBar().hide()
+        self.showFullScreen()
+
+    def _exit_fullscreen(self):
+        """Exits fullscreen mode and restores normal/maximized window and toolbars."""
+        if not getattr(self, "_is_fullscreen_ui", False) and not self.isFullScreen():
+            return
+        self._is_fullscreen_ui = False
+        self.nav_toolbar.show()
+        self.tabs.tabBar().show()
+        if self.tabs.cornerWidget():
+            self.tabs.cornerWidget().show()
+        self.bottom_player.show()
+        self.statusBar().show()
+        if getattr(self, "_was_maximized", False):
+            self.showMaximized()
+        else:
+            self.showNormal()
+
+    def toggle_fullscreen(self):
+        """Toggles fullscreen state manually or via shortcut."""
+        if self.isFullScreen() or getattr(self, "_is_fullscreen_ui", False):
+            cur_view = self._get_current_view()
+            if cur_view:
+                cur_view.page().triggerAction(QWebEnginePage.WebAction.ExitFullScreen)
+            self._exit_fullscreen()
+        else:
+            cur_view = self._get_current_view()
+            if cur_view:
+                # Trigger player fullscreen button in web DOM if available
+                script = """
+                (function() {
+                    const fsBtn = document.querySelector('.ytp-fullscreen-button, ytmusic-player-bar .fullscreen');
+                    if (fsBtn) {
+                        fsBtn.click();
+                        return true;
+                    }
+                    const video = document.querySelector('video');
+                    if (video && video.requestFullscreen) {
+                        video.requestFullscreen().catch(function() {});
+                        return true;
+                    }
+                    return false;
+                })();
+                """
+                cur_view.page().runJavaScript(script)
+            self._enter_fullscreen()
+
+    def _on_escape_pressed(self):
+        """Handles Esc key when in fullscreen."""
+        if self.isFullScreen() or getattr(self, "_is_fullscreen_ui", False):
+            cur_view = self._get_current_view()
+            if cur_view:
+                cur_view.page().triggerAction(QWebEnginePage.WebAction.ExitFullScreen)
+            self._exit_fullscreen()
+        elif self.url_bar.hasFocus():
+            self.url_bar.clearFocus()
 
     # ----------------- Window & Tray Visibility ----------------- #
 

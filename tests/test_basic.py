@@ -27,11 +27,13 @@ class TestYMusicDesktop(unittest.TestCase):
         icon_yt = IconFactory.create_icon("youtube")
         icon_plus = IconFactory.create_icon("plus")
         icon_add = IconFactory.create_icon("add")
+        icon_fullscreen = IconFactory.create_icon("fullscreen")
         
         self.assertFalse(icon_music.isNull())
         self.assertFalse(icon_yt.isNull())
         self.assertFalse(icon_plus.isNull())
         self.assertFalse(icon_add.isNull())
+        self.assertFalse(icon_fullscreen.isNull())
 
     def test_adblocker_domains(self):
         from core.adblocker import AdBlockUrlRequestInterceptor
@@ -69,6 +71,34 @@ class TestYMusicDesktop(unittest.TestCase):
 
         for url in allowed_urls:
             self.assertFalse(interceptor.is_blocked(QUrl(url)), f"Expected {url} to NOT be blocked")
+
+    def test_fullscreen_handling(self):
+        from PyQt6.QtWidgets import QApplication
+        from ui.main_window import MainWindow
+
+        app = QApplication.instance() or QApplication(sys.argv)
+        win = MainWindow()
+        win.show()
+
+        # Check initial state
+        self.assertFalse(win._is_fullscreen_ui)
+        self.assertTrue(win.nav_toolbar.isVisible())
+        self.assertTrue(win.bottom_player.isVisible())
+
+        # Test enter fullscreen
+        win._enter_fullscreen()
+        self.assertTrue(win._is_fullscreen_ui)
+        self.assertFalse(win.nav_toolbar.isVisible())
+        self.assertFalse(win.bottom_player.isVisible())
+
+        # Test exit fullscreen
+        win._exit_fullscreen()
+        self.assertFalse(win._is_fullscreen_ui)
+        self.assertTrue(win.nav_toolbar.isVisible())
+        self.assertTrue(win.bottom_player.isVisible())
+
+        # Clean up
+        win.close()
 
 
 if __name__ == "__main__":

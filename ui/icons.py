@@ -177,6 +177,22 @@ class IconFactory:
             painter.setBrush(QBrush(QColor("#FFFFFF")))
             painter.drawPath(tri)
 
+        elif name == "fullscreen":
+            # 4 corner brackets pointing outwards
+            corner_len = w * 0.22
+            # Top-left
+            painter.drawLine(QPointF(pad, pad + corner_len), QPointF(pad, pad))
+            painter.drawLine(QPointF(pad, pad), QPointF(pad + corner_len, pad))
+            # Top-right
+            painter.drawLine(QPointF(w - pad - corner_len, pad), QPointF(w - pad, pad))
+            painter.drawLine(QPointF(w - pad, pad), QPointF(w - pad, pad + corner_len))
+            # Bottom-left
+            painter.drawLine(QPointF(pad, h - pad - corner_len), QPointF(pad, h - pad))
+            painter.drawLine(QPointF(pad, h - pad), QPointF(pad + corner_len, h - pad))
+            # Bottom-right
+            painter.drawLine(QPointF(w - pad - corner_len, h - pad), QPointF(w - pad, h - pad))
+            painter.drawLine(QPointF(w - pad, h - pad), QPointF(w - pad, h - pad - corner_len))
+
         else:
             # Fallback circle
             painter.drawEllipse(QRectF(pad, pad, w - 2 * pad, h - 2 * pad))

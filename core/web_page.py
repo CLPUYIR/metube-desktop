@@ -118,6 +118,7 @@ class YMusicWebPage(QWebEnginePage):
         if feature in (
             QWebEnginePage.Feature.Notifications,
             QWebEnginePage.Feature.MediaAudioCapture,
+            QWebEnginePage.Feature.MouseLock,
         ):
             self.setFeaturePermission(
                 security_origin, feature, QWebEnginePage.PermissionPolicy.PermissionGrantedByUser
