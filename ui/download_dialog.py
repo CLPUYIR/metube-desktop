@@ -1,5 +1,5 @@
 """
-Download Dialog and Download Manager UI for YMusic Desktop.
+Download Dialog and Download Manager UI for MeTube Desktop.
 Provides:
 1. QuickDownloadDialog: Streamlined modal for setting format/quality & initiating downloads.
 2. DownloadManagerWindow: Dedicated download manager displaying active progress, speeds, and history.
@@ -44,7 +44,7 @@ class QuickDownloadDialog(QDialog):
 
     def __init__(self, current_url: str, default_title: str = "", parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Download Media - YMusic")
+        self.setWindowTitle("Download Media - MeTube")
         self.resize(520, 420)
         self.url = current_url
         self.default_title = default_title
@@ -320,7 +320,7 @@ class DownloadManagerWindow(QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Download Manager - YMusic")
+        self.setWindowTitle("Download Manager - MeTube")
         self.resize(650, 480)
 
         self.item_widgets = {}

@@ -1,5 +1,5 @@
 """
-Basic Unit Tests for YMusic Desktop modules.
+Basic Unit Tests for MeTube Desktop modules.
 """
 import sys
 import os
@@ -9,12 +9,12 @@ import unittest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-class TestYMusicDesktop(unittest.TestCase):
+class TestMeTubeDesktop(unittest.TestCase):
     def test_imports_and_config(self):
         import config
         from core import adblocker, downloader, media_controller, web_page
         from ui import icons, styles, download_dialog, main_window
-        self.assertEqual(config.Config.APP_NAME, "YMusic Desktop")
+        self.assertEqual(config.Config.APP_NAME, "MeTube Desktop")
         self.assertIn("auto_pause_inactive_tabs", config.settings.defaults)
         self.assertTrue(config.settings.get("auto_pause_inactive_tabs"))
 

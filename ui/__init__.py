@@ -1,3 +1,3 @@
 """
-UI Package for YMusic Desktop.
+UI Package for MeTube Desktop.
 """

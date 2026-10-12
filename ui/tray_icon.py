@@ -1,5 +1,5 @@
 """
-System Tray Integration for YMusic Desktop.
+System Tray Integration for MeTube Desktop.
 Provides mini-player media controls, current track status, desktop notifications,
 and background playback management when the main window is minimized or closed.
 """
@@ -28,7 +28,7 @@ class SystemTrayManager(QObject):
         super().__init__(parent)
         self.tray_icon = QSystemTrayIcon(parent)
         self.tray_icon.setIcon(IconFactory.create_icon("app_logo", size=32))
-        self.tray_icon.setToolTip("YMusic Desktop - Ready")
+        self.tray_icon.setToolTip("MeTube Desktop - Ready")
 
         self.current_title = "No media playing"
         self.current_artist = ""
@@ -75,7 +75,7 @@ class SystemTrayManager(QObject):
         self.menu.addAction(self.action_toggle_window)
 
         # Quit action
-        self.action_quit = QAction(IconFactory.create_icon("close"), "Quit YMusic", self.menu)
+        self.action_quit = QAction(IconFactory.create_icon("close"), "Quit MeTube", self.menu)
         self.action_quit.triggered.connect(self.quit_requested.emit)
         self.menu.addAction(self.action_quit)
 
@@ -115,11 +115,11 @@ class SystemTrayManager(QObject):
             self.action_play_pause.setText("Play")
 
         # Update tooltip
-        self.tray_icon.setToolTip(f"YMusic: {title}" if title != "No media playing" else "YMusic Desktop")
+        self.tray_icon.setToolTip(f"MeTube: {title}" if title != "No media playing" else "MeTube Desktop")
 
         # Notify user of track change if window is minimized/hidden
         if settings.get("notifications_enabled", True) and title != "No media playing" and title != old_title:
-            msg_body = artist if artist else "Playing on YMusic"
+            msg_body = artist if artist else "Playing on MeTube"
             self.tray_icon.showMessage(
                 "Now Playing",
                 f"{title}\n{msg_body}",

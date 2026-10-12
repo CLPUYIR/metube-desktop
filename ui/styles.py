@@ -1,5 +1,5 @@
 """
-Modern Dark Theme Stylesheets for YMusic Desktop.
+Modern Dark Theme Stylesheets for MeTube Desktop.
 Designed to seamlessly match YouTube Music's sleek aesthetic.
 """
 

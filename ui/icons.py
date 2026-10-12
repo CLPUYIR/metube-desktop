@@ -1,5 +1,5 @@
 """
-Vector Icon Generator for YMusic Desktop.
+Vector Icon Generator for MeTube Desktop.
 Draws crisp, high-DPI vector icons using QPainter and QPainterPath.
 Ensures zero external asset dependencies and seamless cross-platform consistency.
 """

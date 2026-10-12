@@ -1,5 +1,5 @@
 """
-Configuration and Settings Manager for YMusic Desktop.
+Configuration and Settings Manager for MeTube Desktop.
 Handles persistent storage of user preferences, download directories,
 ad-blocking filters, and audio/video format options.
 """
@@ -11,8 +11,8 @@ from PyQt6.QtCore import QStandardPaths
 
 
 class Config:
-    APP_NAME = "YMusic Desktop"
-    APP_ORG = "YMusicProject"
+    APP_NAME = "MeTube Desktop"
+    APP_ORG = "MeTubeProject"
     APP_VERSION = "1.0.2"
 
     # Default URLs
@@ -32,7 +32,7 @@ class Config:
             QStandardPaths.StandardLocation.AppConfigLocation
         )
         if not base_dir:
-            self.config_dir = Path.home() / ".ymusic_desktop"
+            self.config_dir = Path.home() / ".metube_desktop"
         else:
             p = Path(base_dir)
             if self.APP_NAME.lower() not in p.as_posix().lower():
@@ -42,6 +42,15 @@ class Config:
         
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.config_file = self.config_dir / "settings.json"
+
+        # Check and migrate settings from legacy .ymusic_desktop if available
+        legacy_file = Path.home() / ".ymusic_desktop" / "settings.json"
+        if not self.config_file.exists() and legacy_file.exists():
+            try:
+                import shutil
+                shutil.copy2(legacy_file, self.config_file)
+            except Exception:
+                pass
 
         # Default music download location
         default_music_dir = QStandardPaths.writableLocation(

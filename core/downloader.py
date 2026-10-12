@@ -1,5 +1,5 @@
 """
-Downloader Module for YMusic Desktop.
+Downloader Module for MeTube Desktop.
 Leverages yt-dlp in background QThreads to download:
 - High-quality audio (MP3 320k, Opus, M4A, FLAC) with ID3 metadata and embedded cover art.
 - Full HD / 4K / 720p video streams with automatic audio muxing.

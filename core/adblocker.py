@@ -1,5 +1,5 @@
 """
-Ad Blocker Engine for YMusic Desktop.
+Ad Blocker Engine for MeTube Desktop.
 Implements:
 1. QWebEngineUrlRequestInterceptor for blocking external ad network domains & trackers.
 2. Injected CSS (TrustedHTML compliant) for hiding banners, sponsored units, and upsell popups.
@@ -217,7 +217,7 @@ def create_adblock_script() -> QWebEngineScript:
     Uses textContent to comply with YouTube's TrustedHTML CSP.
     """
     script = QWebEngineScript()
-    script.setName("YMusicAdBlockScript")
+    script.setName("MeTubeAdBlockScript")
     script.setInjectionPoint(QWebEngineScript.InjectionPoint.DocumentReady)
     script.setWorldId(QWebEngineScript.ScriptWorldId.MainWorld)
     script.setRunsOnSubFrames(True)

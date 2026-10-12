@@ -1,5 +1,5 @@
 """
-Main Application Window for YMusic Desktop.
+Main Application Window for MeTube Desktop.
 Coordinates persistent dual-tab WebEngine views (YouTube Music & YouTube Video),
 Media Controller, System Tray, Ad Blocker, and Downloader.
 """
@@ -39,7 +39,7 @@ from PyQt6.QtGui import QIcon, QCloseEvent, QWindowStateChangeEvent, QKeySequenc
 
 from config import settings, Config
 from core.adblocker import AdBlockUrlRequestInterceptor, create_adblock_script
-from core.web_page import YMusicWebPage
+from core.web_page import MeTubeWebPage
 from core.media_controller import MediaController
 from core.downloader import download_manager
 from ui.icons import IconFactory
@@ -52,7 +52,7 @@ class SettingsDialog(QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Preferences - YMusic Desktop")
+        self.setWindowTitle("Preferences - MeTube Desktop")
         self.resize(460, 340)
         self._init_ui()
 
@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("YMusic Desktop")
+        self.setWindowTitle("MeTube Desktop")
         self.resize(1200, 800)
         self.setWindowIcon(IconFactory.create_icon("app_logo", size=64))
 
@@ -433,7 +433,7 @@ class MainWindow(QMainWindow):
             service = "music"
 
         view = QWebEngineView(self)
-        page = YMusicWebPage(self.profile, view, window_ref=self)
+        page = MeTubeWebPage(self.profile, view, window_ref=self)
         view.setPage(page)
         view.setProperty("service", service)
 
@@ -455,7 +455,7 @@ class MainWindow(QMainWindow):
         return view
 
     def create_new_tab_for_page(self) -> QWebEnginePage:
-        """Factory method called by YMusicWebPage.createWindow for new tabs."""
+        """Factory method called by MeTubeWebPage.createWindow for new tabs."""
         view = self.create_new_tab(service="youtube", switch_to=True)
         return view.page()
 
@@ -490,11 +490,11 @@ class MainWindow(QMainWindow):
         # Update window title
         t = cur_view.title()
         if t:
-            self.setWindowTitle(f"{t} - YMusic")
+            self.setWindowTitle(f"{t} - MeTube")
         else:
             svc = cur_view.property("service") or "music"
             name = "YouTube Music" if svc == "music" else "YouTube Video"
-            self.setWindowTitle(f"{name} - YMusic")
+            self.setWindowTitle(f"{name} - MeTube")
 
         # Immediately update bottom player & tray state
         self.media_ctrl.update_track_info()
@@ -565,7 +565,7 @@ class MainWindow(QMainWindow):
             self.tabs.setTabToolTip(idx, f"{title}\n{view.url().toString()}")
 
             if self._get_current_view() == view:
-                self.setWindowTitle(f"{title} - YMusic")
+                self.setWindowTitle(f"{title} - MeTube")
 
     def _on_tab_url_changed(self, view: QWebEngineView, url: QUrl):
         """Updates URL bar and service icon when URL changes."""
@@ -822,7 +822,7 @@ class MainWindow(QMainWindow):
             self.hide()
             if settings.get("notifications_enabled", True):
                 self.tray_mgr.tray_icon.showMessage(
-                    "YMusic Desktop",
+                    "MeTube Desktop",
                     "Application is running in the background.",
                     QIcon(IconFactory.create_icon("app_logo")),
                     2000,

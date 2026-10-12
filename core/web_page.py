@@ -1,5 +1,5 @@
 """
-Custom QWebEnginePage and Web Profile setup for YMusic Desktop.
+Custom QWebEnginePage and Web Profile setup for MeTube Desktop.
 Provides:
 1. Background playback persistence (spoofing Page Visibility API so media plays when minimized/hidden).
 2. Desktop User-Agent handling and permission grants.
@@ -52,7 +52,7 @@ BACKGROUND_PLAYBACK_JS = """
 """
 
 
-class YMusicWebPage(QWebEnginePage):
+class MeTubeWebPage(QWebEnginePage):
     """
     Custom WebEnginePage with enhanced playback persistence,
     custom permission handler, and window creation rules.
@@ -106,7 +106,7 @@ class YMusicWebPage(QWebEnginePage):
     def _inject_background_script(self):
         """Injects background playback persistence script at DocumentCreation."""
         script = QWebEngineScript()
-        script.setName("YMusicBackgroundPlaybackScript")
+        script.setName("MeTubeBackgroundPlaybackScript")
         script.setInjectionPoint(QWebEngineScript.InjectionPoint.DocumentCreation)
         script.setWorldId(QWebEngineScript.ScriptWorldId.MainWorld)
         script.setRunsOnSubFrames(False)  # Only run on main frame
@@ -157,3 +157,7 @@ class YMusicWebPage(QWebEnginePage):
             if new_page:
                 return new_page
         return self
+
+
+# Backward compatibility alias
+YMusicWebPage = MeTubeWebPage

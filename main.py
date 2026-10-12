@@ -1,5 +1,5 @@
 """
-YMusic Desktop - Entry Point & Application Lifecycle.
+MeTube Desktop - Entry Point & Application Lifecycle.
 A dedicated lightweight, ad-free desktop client for YouTube and YouTube Music
 with background playback, media controls, and yt-dlp downloader integration.
 """
@@ -32,7 +32,7 @@ from ui.main_window import MainWindow
 
 def parse_arguments():
     """Parses CLI arguments."""
-    parser = argparse.ArgumentParser(description="YMusic Desktop Client")
+    parser = argparse.ArgumentParser(description="MeTube Desktop Client")
     parser.add_argument(
         "--minimized",
         action="store_true",
@@ -74,7 +74,7 @@ def main():
         window.hide()
         if settings.get("notifications_enabled", True):
             window.tray_mgr.tray_icon.showMessage(
-                "YMusic Desktop",
+                "MeTube Desktop",
                 "Started in background (System Tray).",
                 window.windowIcon(),
                 2000,

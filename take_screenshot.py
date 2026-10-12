@@ -1,5 +1,5 @@
 """
-Visual Snapshot & Verification Script for YMusic Desktop.
+Visual Snapshot & Verification Script for MeTube Desktop.
 Launches the Qt Application, allows the WebEngine to load, captures a screenshot,
 saves it to the artifact directory, and then exits cleanly.
 """
@@ -40,7 +40,7 @@ def take_snapshot():
         artifact_dir = repo_dir / "screenshots"
 
     artifact_dir.mkdir(parents=True, exist_ok=True)
-    screenshot_path = str(artifact_dir / "ymusic_desktop_ui.png")
+    screenshot_path = str(artifact_dir / "metube_desktop_ui.png")
 
     def capture():
         pixmap = window.grab()

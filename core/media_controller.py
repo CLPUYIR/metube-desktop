@@ -1,5 +1,5 @@
 """
-Media Controller Bridge for YMusic Desktop.
+Media Controller Bridge for MeTube Desktop.
 Executes JavaScript inside the YouTube / YouTube Music WebEngine context to
 control playback, seek, adjust volume, and extract current track metadata.
 """
